@@ -1,10 +1,17 @@
 {
   "base_url": "http://localhost:8000",
-  "resource": "items",
+  "resource": "posts",
   "id_field": "id",
   "missing_id": "999999",
   "list_key": null,
-  "create": { "title": "Первая запись" },
-  "update": { "title": "Изменённая запись" },
-  "required_field": "title"
+  "create": { "title": "My first post!","content": "XD", "author": "Alex", "is_published": true },
+  "update": { "content": "hahaha"},
+  "required_field": "title",
+  "errors": [
+    { "body": { "title": ""}, "field": "title" },
+    { "body": { "content": ""}, "field": "content" },
+    { "body": { "author": ""}, "field": "author" },
+    { "body": { "is_published": null}, "field": "is_published"}
+  ],
+  "filter": { "param": "author", "value": "Alex", "other": "Ivan" }
 }
