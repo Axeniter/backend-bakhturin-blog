@@ -2,7 +2,7 @@ import time
 from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from schemas import PostResponse, PostCreate, PostUpdate
+from .schemas import PostResponse, PostCreate, PostUpdate
 
 app = FastAPI(title="Blog")
 
