@@ -8,37 +8,42 @@
 GET {{base}}/health
 
 ### Создать
-POST {{base}}/api/items
+POST {{base}}/api/posts
 Content-Type: application/json
 
-{ "title": "Первая запись" }
+{
+    "title": "Был создан новый блог",
+    "content": "Это просто невероятно, такого никто никогда не делал.",
+    "author": "Алексей",
+    "is_published": true
+}
 
 ### Список
-GET {{base}}/api/items
+GET {{base}}/api/posts
 
 ### Получить одну запись
-GET {{base}}/api/items/1
+GET {{base}}/api/posts/1
 
 ### Изменить
-PATCH {{base}}/api/items/1
+PATCH {{base}}/api/posts/1
 Content-Type: application/json
 
-{ "title": "Изменённая запись" }
+{ "content": "Ладно, не так уж это и круто на самом деле. Да и вообще отстой полный, если честно." }
 
 ### Удалить
-DELETE {{base}}/api/items/1
+DELETE {{base}}/api/posts/1
 
 ### После удаления должен быть 404
-GET {{base}}/api/items/1
+GET {{base}}/api/posts/1
 
 ### Сломанный JSON, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/posts
 Content-Type: application/json
 
 { "title":
 
 ### Пустое обязательное поле, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/posts
 Content-Type: application/json
 
 { "title": "" }

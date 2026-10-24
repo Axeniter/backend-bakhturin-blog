@@ -1,25 +1,28 @@
-<!--
-  Это шаблон README проекта. После создания своего репозитория:
-  1. Переименовать репозиторий в backend-<фамилия>-<тема>, например backend-ivanova-library.
-  2. Заполнить разделы ниже под свою тему и удалить этот комментарий.
-  Задания лаб лежат в папке docs/, начинать с docs/README.md.
--->
-
 # Название проекта
 
-Тема №__: **...**. Одна фраза: что это и для кого.
+Тема №4: **Блог**. Сервис, где все могут быть авторами и читателями.
 
 | | |
 | --- | --- |
-| Главная сущность | ... |
-| Связанная сущность (1:N) | ... |
+| Главная сущность | Пост (post) |
+| Связанная сущность (1:N) | Комментарий (comment) |
 | Фишка | ... |
-| Стек | язык, фреймворк, база данных |
+| Стек | Python, FastAPI, SQLite |
 
-## Как запустить
+## Как запустить (linux)
 
 ```bash
-# команды по порядку: от git clone до работающего сервиса
+# repository install
+git clone https://github.com/Axeniter/backend-bakhturin-blog.git
+cd backend-bakhturin-blog
+
+# requirements install
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# server start
+uvicorn src.main:app --reload --port 8000
 ```
 
 Сервис работает на `http://localhost:8000`. Запросы для демонстрации лежат в `requests.http`.
@@ -29,11 +32,11 @@
 | Метод | Путь | Что делает | Ответ |
 | --- | --- | --- | --- |
 | GET | `/health` | Проверка, что сервис жив | 200 `{"status":"ok"}` |
-| POST | `/api/items` | Создать | 201 и объект с `id`; 400 при ошибке |
-| GET | `/api/items` | Список | 200 |
-| GET | `/api/items/{id}` | Получить одну запись | 200; 404 |
-| PATCH | `/api/items/{id}` | Изменить | 200; 400; 404 |
-| DELETE | `/api/items/{id}` | Удалить | 204; 404 |
+| POST | `/api/posts` | Создать | 201 и объект с `id`; 400 при ошибке |
+| GET | `/api/posts` | Список | 200 |
+| GET | `/api/posts/{id}` | Получить одну запись | 200; 404 |
+| PATCH | `/api/posts/{id}` | Изменить | 200; 400; 404 |
+| DELETE | `/api/posts/{id}` | Удалить | 204; 404 |
 
 ## ER-диаграмма
 
