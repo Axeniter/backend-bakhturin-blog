@@ -14,4 +14,24 @@
     { "body": { "is_published": null}, "field": "is_published"}
   ],
   "filter": { "param": "author", "value": "Alex", "other": "Ivan" }
+
+  "text_field": "title",
+  "search": { "param": "q", "field": "title" },
+  "child": {
+    "resource": "comments",
+      "create": { "text": "XD", "author": "Dima" },
+      "parent_field": "post_id"
+  },
+  "rule": {
+    "description": "You can't comment unpublished post",
+    "parent": { "is_published": false },
+    "setup": [],
+    "violate": {
+      "method": "POST",
+      "path": "/api/posts/{id}/comments",
+      "body": { "text": "hi", "author": "Max" }
+    },
+    "expect_status": 409
+  },
+  "stats_path": "/api/posts/stats"
 }
