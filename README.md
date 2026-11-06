@@ -40,19 +40,22 @@ uvicorn src.main:app --reload --port 8000
 
 ## ER-диаграмма
 
-<!-- С лабы 2. Блок mermaid GitHub рисует сам. -->
-
 ```mermaid
 erDiagram
-    parents ||--o{ children : "имеет"
-    parents {
+    POSTS {
         int id PK
-        varchar title
+        string title
+        text content
+        string author
+        boolean is_published
     }
-    children {
+    COMMENTS {
         int id PK
-        int parent_id FK
+        text text
+        string author
+        int post_id FK
     }
+    POSTS ||--o{ COMMENTS : "has"
 ```
 
 ## Интерфейс
