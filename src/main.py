@@ -3,18 +3,18 @@ from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from .schemas import PostResponse, PostCreate, PostUpdate
+from src.routers import posts_router, comments_router
+from src.database import engine
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="Blog")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await engine.dispose()
 
-# db
-posts = []
-next_id = 1
-
-def get_next_id() -> int:
-    global next_id
-    current = next_id
-    next_id += 1
-    return current
+app = FastAPI(title="Blog", lifespan=lifespan)
+app.include_router(posts_router)
+app.include_router(comments_router)
 
 # logs
 @app.middleware("http")
@@ -33,47 +33,3 @@ async def validation_handler(request: Request, exc: RequestValidationError):
     field = str(loc[-1]) if loc else "unknown"
     return JSONResponse(status_code=400, content={"error": err["msg"], "field": field})
 
-# endpoints
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-@app.post("/api/posts", status_code=201, response_model=PostResponse)
-def create_post(data: PostCreate):
-    post = {"id": get_next_id(), **data.model_dump()}
-    posts.append(post)
-    return post
-
-@app.get("/api/posts", response_model=list[PostResponse])
-def get_posts(
-    limit: int = Query(10, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    author: str | None = None,
-):
-    items = posts
-    if author is not None:
-        items = [p for p in items if p["author"] == author]
-    return items[offset: offset + limit]
-
-@app.get("/api/posts/{post_id}", response_model=PostResponse)
-def get_post(post_id: int):
-    for p in posts:
-        if p["id"] == post_id:
-            return p
-    raise HTTPException(status_code=404, detail="Post not found")
-
-@app.patch("/api/posts/{post_id}", response_model=PostResponse)
-def update_post(post_id: int, data: PostUpdate):
-    for i, p in enumerate(posts):
-        if p["id"] == post_id:
-            p.update(data.model_dump(exclude_unset=True))
-            return p
-    raise HTTPException(status_code=404, detail="Post not found")
-
-@app.delete("/api/posts/{post_id}", status_code=204)
-def delete_post(post_id: int):
-    for i, p in enumerate(posts):
-        if p["id"] == post_id:
-            posts.pop(i)
-            return None
-    raise HTTPException(status_code=404, detail="Post not found")
