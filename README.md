@@ -58,6 +58,36 @@ erDiagram
     POSTS ||--o{ COMMENTS : "has"
 ```
 
+## Индекс и EXPLAIN
+
+Для поиска по заголовку (`GET /api/posts?q=...`) используется `ILIKE`:
+
+```python
+stmt = stmt.where(models.Post.title.ilike(f"%{q}%"))
+```
+
+В модели объявлен индекс:
+
+```python
+Index("ix_posts_title", "title")
+```
+
+Проверка плана запроса:
+
+```sql
+EXPLAIN SELECT * FROM posts WHERE title ILIKE '%пост%';
+```
+
+Вывод:
+
+```text
+                       QUERY PLAN
+--------------------------------------------------------
+ Seq Scan on posts  (cost=0.00..17.38 rows=1 width=109)
+   Filter: ((title)::text ~~* '%пост%'::text)
+(2 rows)
+```
+
 ## Интерфейс
 
 <!-- С лабы 4: скриншот, например ![Интерфейс](docs/screenshot.png) -->

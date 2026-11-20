@@ -13,6 +13,11 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
 
 app = FastAPI(title="Blog", lifespan=lifespan)
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 app.include_router(posts_router)
 app.include_router(comments_router)
 
