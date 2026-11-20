@@ -16,7 +16,7 @@ class Post(Base):
     comments = relationship(
         "Comment",
         back_populates="post",
-        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
 
     __table_args__ = (

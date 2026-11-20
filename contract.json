@@ -13,7 +13,7 @@
     { "body": { "author": ""}, "field": "author" },
     { "body": { "is_published": null}, "field": "is_published"}
   ],
-  "filter": { "param": "author", "value": "Alex", "other": "Ivan" }
+  "filter": { "param": "author", "value": "Alex", "other": "Ivan" },
 
   "text_field": "title",
   "search": { "param": "q", "field": "title" },

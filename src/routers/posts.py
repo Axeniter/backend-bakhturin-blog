@@ -27,13 +27,15 @@ async def get_stats(db: AsyncSession = Depends(get_db)):
         )
     ).scalar() or 0
 
-    avg_subq = (
-        select(func.avg(func.coalesce(func.count(models.Comment.id), 0)))
-        .select_from(models.Post)
+    counts_subq = (
+        select(models.Post.id, func.count(models.Comment.id).label("cnt"))
         .outerjoin(models.Comment)
         .group_by(models.Post.id)
+        .subquery()
     )
-    avg_comments = (await db.execute(avg_subq)).scalar() or 0.0
+    avg_comments = (
+        await db.execute(select(func.avg(counts_subq.c.cnt)))
+    ).scalar() or 0.0
 
     return schemas.PostStats(
         total_posts=total_posts,
@@ -48,7 +50,7 @@ async def get_posts(
     limit: int = Query(10, ge=1, le=100),
     offset: int = Query(0, ge=0),
     author: Optional[str] = None,
-    q: Optional[str] = Query(None, description="Поиск по заголовку без учёта регистра"),
+    q: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_db),
 ):
     stmt = select(models.Post)
